@@ -21,7 +21,7 @@ class Vanguard():
     def login(self):
         self.LOGGED_IN = self.session.post(self.LOGIN_ENDPOINT, json={"request": {
             "Username": self.username, "Password": self.password}}, headers={"anti-forgery-token": self.get_antiforgery_token()}).status_code == 200
-        self.hierarchy_id = self.get_heirarchy()
+        self.get_heirarchy()
 
     def is_logged_in(self):
         return self.LOGGED_IN
