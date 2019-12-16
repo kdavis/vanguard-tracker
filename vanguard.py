@@ -39,3 +39,4 @@ class Vanguard():
                 "value": holding['MarketValue']['Amount'],
                 "name": holding["ProductCode"]
             })
+        return resultant
