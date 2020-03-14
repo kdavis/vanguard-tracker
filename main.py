@@ -7,14 +7,13 @@ from vanguard import Vanguard
 
 EMAIL = os.environ.get('VANGUARD_USERNAME')
 PASSWORD = os.environ.get('VANGUARD_PASSWORD')
-HOURS = int(os.environ.get('HOURS'))
 DB_HOST = os.environ.get('DB_HOST')
 DB_USERNAME = os.environ.get('DB_USERNAME')
 DB_PORT = int(os.environ.get('DB_PORT'))
 DB_PASSWORD = os.environ.get('DB_PASSWORD')
 DB_DATABASE = os.environ.get('DB_DATABASE')
 
-if EMAIL is None or PASSWORD is None or HOURS is None or DB_HOST is None:
+if EMAIL is None or PASSWORD is None or DB_HOST is None:
     print("Environment variables are needed!")
     sys.exit(0)
 
@@ -45,18 +44,18 @@ execute_query(db_create_query)
 
 print("Created database")
 
-while True:
-    vanguard = Vanguard(EMAIL, PASSWORD)
-    vanguard.login()
 
-    values = vanguard.get_data()
-    for value in values:
-        print("Found value of %s for %s" % (value['value'], value['name']))
+vanguard = Vanguard(EMAIL, PASSWORD)
+vanguard.login()
 
-        insert_query = "INSERT INTO vanguard_investments (Name, Value, RecordDateTime) values ('%s', %s, '%s')" % (
-            value['name'], value['value'], strftime("%Y-%m-%d %H:%M:%S"))
+values = vanguard.get_data()
+for value in values:
+    print("Found value of %s for %s" % (value['value'], value['name']))
 
-        execute_query(insert_query)
+    insert_query = "INSERT INTO vanguard_investments (Name, Value, RecordDateTime) values ('%s', %s, '%s')" % (
+        value['name'], value['value'], strftime("%Y-%m-%d %H:%M:%S"))
+
+    execute_query(insert_query)
 
     print("Inserted data points.")
-    time.sleep(HOURS * 3600)
+
